@@ -101,7 +101,7 @@
 param (
     [Parameter(Mandatory = $true)][string]$refVmName,
     [Parameter(Mandatory = $true)][string]$refVmRg,
-    [Parameter(Mandatory = $false)][string]$cseURI = 'https://raw.githubusercontent.com/lenvolk/images-using-azure-image-builder/main/LenVolk/Scripts/Sysprep.ps1',
+    [Parameter(Mandatory = $false)][string]$cseURI = 'https://github.com/Asithdee/AVD/blob/main/sysprep.ps1',
     [Parameter(Mandatory = $false)][switch]$galDeploy = $true,
     [Parameter(Mandatory = $false)][string]$galName,
     [parameter(Mandatory = $false)][string]$galDefName,
