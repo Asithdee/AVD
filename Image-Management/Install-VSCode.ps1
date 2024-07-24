@@ -9,4 +9,8 @@ Try {
     Write-Host "Installing VS Code now..."
     Start-Process -FilePath 'c:\windows\temp\VSCode_x64.exe' -Args '/verysilent /suppressmsgboxes /mergetasks=!runcode' -Wait -PassThru
     Write-Host "Successfully installed VS Code..."
+
+       } catch {
+    Write-Error -Message $_.Exception
+    throw $_.Exception
 }
