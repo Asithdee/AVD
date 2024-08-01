@@ -1,0 +1,59 @@
+{
+  "properties": {
+    "displayName": "AuditSubnetsWithPrivateEndpointPolicy",
+    "policyType": "Custom",
+    "mode": "All",
+    "metadata": {
+      "createdBy": "72e6a653-7e6a-4d4c-8aaf-e0efe866bda0",
+      "createdOn": "2024-08-01T01:19:07.3799429Z",
+      "updatedBy": "72e6a653-7e6a-4d4c-8aaf-e0efe866bda0",
+      "updatedOn": "2024-08-01T02:47:11.0530251Z"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Audit or Disabled the execution of the Policy"
+        },
+        "allowedValues": [
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/virtualNetworks/subnets"
+          },
+          {
+            "field": "Microsoft.Network/virtualNetworks/subnets/privateEndpointNetworkPolicies",
+            "equals": "Disabled"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    },
+    "versions": [
+      "1.0.0"
+    ]
+  },
+  "id": "/subscriptions/b3018435-e16b-43ba-a098-24904a1f278e/providers/Microsoft.Authorization/policyDefinitions/e7d6dfba-f8dd-4310-b840-4dba72b316f8",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "e7d6dfba-f8dd-4310-b840-4dba72b316f8",
+  "systemData": {
+    "createdBy": "localadmin@kandyansky.com",
+    "createdByType": "User",
+    "createdAt": "2024-08-01T01:19:07.3380628Z",
+    "lastModifiedBy": "localadmin@kandyansky.com",
+    "lastModifiedByType": "User",
+    "lastModifiedAt": "2024-08-01T02:47:11.0272759Z"
+  }
+}
