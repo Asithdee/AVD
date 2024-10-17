@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "AVD: Assign Built-In User-Assigned Managed Identity to Virtual Machines",
+    "displayName": "AVD-Assign BuiltIn User Assigned Managed Identity to Virtual Machines",
     "policyType": "Custom",
     "mode": "Indexed",
     "description": "Create and assign a built-in user-assigned managed identity or assign a pre-created user-assigned managed identity at scale to virtual machines. For more detailed documentation, visit aka.ms/managedidentitypolicy.",
