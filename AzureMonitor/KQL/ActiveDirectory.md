@@ -1,6 +1,7 @@
 KQL quries
 
 User logon details
+
 Event
 | where EventID == "4768"
 | extend DateTime= TimeGenerated
