@@ -1,0 +1,11 @@
+$cert = New-SelfSignedCertificate `
+   -CertStoreLocation Cert:\LocalMachine\My `
+   -DnsName "Kandy" `
+   -Type CodeSigningCert `
+   -Subject "MSIXApps" `
+   -notafter (Get-Date).AddMonths(24) `
+   -Verbose
+$cert
+$secPassword = ConvertTo-SecureString -String 'aa' -Force -AsPlainText
+$certPath = "Cert:\LocalMachine\My\$($Cert.Thumbprint)"
+Export-PfxCertificate -Cert $certPath -FilePath 'C:\tools\MSIX-CodeSigning.pfx' -Password $secPassword
