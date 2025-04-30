@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "NYC-Configure Windows Machines to be associated with a Data Collection Rule or a Data Collection Endpoint-Performance",
+    "displayName": "AVD-Configure Windows Machines to be associated with a Data Collection Rule or a Data Collection Endpoint-Performance",
     "policyType": "Custom",
     "mode": "Indexed",
     "description": "Deploy Association to link Windows virtual machines, virtual machine scale sets, and Arc machines to the specified Data Collection Rule or the specified Data Collection Endpoint. The list of locations and OS images are updated over time as support is increased.",
