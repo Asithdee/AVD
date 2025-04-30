@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "NYC- Configure Windows virtual machines to run Azure Monitor Agent with user-assigned managed identity-based authentication",
+    "displayName": "AVD- Configure Windows virtual machines to run Azure Monitor Agent with user-assigned managed identity-based authentication",
     "policyType": "Custom",
     "mode": "Indexed",
     "description": "Automate the deployment of Azure Monitor Agent extension on your Windows virtual machines for collecting telemetry data from the guest OS. This policy will install the extension and configure it to use the specified user-assigned managed identity if the OS and region are supported, and skip install otherwise. Learn more: https://aka.ms/AMAOverview.",
