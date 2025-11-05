@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "eastus2"
+    },
+    "vnetResourceId": {
+      "value": "/subscriptions/45f715fc-56b2-44ed-9e69-8250d36d2d89/resourceGroups/RG-SSrvs/providers/Microsoft.Network/virtualNetworks/VNET-HUB"
+    },
+    "gatewayName": {
+      "value": "gw-s2s"
+    },
+    "gatewayPublicIpName": {
+      "value": "gw-pip-2"
+    },
+    "gatewayPublicIpResourceId": {
+      "value": "/subscriptions/45f715fc-56b2-44ed-9e69-8250d36d2d89/resourceGroups/RG-SSrvs/providers/Microsoft.Network/publicIPAddresses/gw-pip-2"
+    },
+    "gatewayPublicIpZones": {
+      "value": [ "1" ]
+    },
+    "gatewaySkuName": {
+      "value": "VpnGw2AZ"
+    },
+    "localGatewayName": {
+      "value": "s2s-localgw"
+    },
+    "localGatewayIp": {
+      "value": "135.233.2.12"
+    },
+    "localGatewayAddressPrefixes": {
+      "value": [
+        "10.10.5.0/24",
+        "10.10.0.0/24"
+      ]
+    },
+    "connectionName": {
+      "value": "VPN-S2S-Connection"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus2"
+    },
+    "vnetResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "Full resourceId of the virtual network that contains the GatewaySubnet (e.g. /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.Network/virtualNetworks/<vnet>)."
+      }
+    },
+    "gatewayName": {
+      "type": "string",
+      "defaultValue": "gw-s2s"
+    },
+    "gatewayPublicIpName": {
+      "type": "string",
+      "defaultValue": "gw-pip"
+    },
+    "gatewayPublicIpResourceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "If set, use this existing public IP resource for the VPN gateway (full resourceId). If empty, the template will create a new Public IP with name gatewayPublicIpName. Example: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.Network/publicIPAddresses/<pip>"
+      }
+    },
+    "gatewayPublicIpZones": {
+      "type": "array",
+      "defaultValue": [ "1" ],
+      "metadata": {
+        "description": "Availability zone(s) for the gateway public IP. Must be set when using AZ VPN SKUs (e.g. VpnGw2AZ). Use an array like [ '1' ] or [ '1','2' ]."
+      }
+    },
+    "gatewaySkuName": {
+      "type": "string",
+      "defaultValue": "VpnGw2AZ"
+    },
+    "localGatewayName": {
+      "type": "string",
+      "defaultValue": "s2s-localgw"
+    },
+    "localGatewayIp": {
+      "type": "string",
+      "defaultValue": "135.233.2.12"
+    },
+    "localGatewayAddressPrefixes": {
+      "type": "array",
+      "defaultValue": [
+        "10.10.5.0/24",
+        "10.10.0.0/24"
+      ]
+    },
+    "connectionName": {
+      "type": "string",
+      "defaultValue": "VPN-S2S-Connection"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "condition": "[equals(parameters('gatewayPublicIpResourceId'), '')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2024-07-01",
+      "name": "[parameters('gatewayPublicIpName')]",
+      "location": "[parameters('location')]",
+      "zones": "[parameters('gatewayPublicIpZones')]",
+      "sku": { "name": "Standard" },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworkGateways",
+      "apiVersion": "2024-07-01",
+      "name": "[parameters('gatewayName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicIpName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "default",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[if(equals(parameters('gatewayPublicIpResourceId'), ''), resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicIpName')), parameters('gatewayPublicIpResourceId'))]"
+              },
+              "subnet": {
+                "id": "[concat(parameters('vnetResourceId'), '/subnets/GatewaySubnet')]"
+              }
+            }
+          }
+        ],
+        "sku": {
+          "name": "[parameters('gatewaySkuName')]",
+          "tier": "[parameters('gatewaySkuName')]"
+        },
+        "gatewayType": "Vpn",
+        "vpnType": "RouteBased",
+        "enableBgp": true,
+        "activeActive": false
+      }
+    },
+    {
+      "type": "Microsoft.Network/localNetworkGateways",
+      "apiVersion": "2024-07-01",
+      "name": "[parameters('localGatewayName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('gatewayName'))]"
+      ],
+      "properties": {
+        "localNetworkAddressSpace": {
+          "addressPrefixes": "[parameters('localGatewayAddressPrefixes')]"
+        },
+        "gatewayIpAddress": "[parameters('localGatewayIp')]"
+      }
+    },
+    {
+      "type": "Microsoft.Network/connections",
+      "apiVersion": "2024-07-01",
+      "name": "[parameters('connectionName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('gatewayName'))]",
+        "[resourceId('Microsoft.Network/localNetworkGateways', parameters('localGatewayName'))]"
+      ],
+      "properties": {
+        "virtualNetworkGateway1": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('gatewayName'))]",
+          "properties": {}
+        },
+        "localNetworkGateway2": {
+          "id": "[resourceId('Microsoft.Network/localNetworkGateways', parameters('localGatewayName'))]",
+          "properties": {}
+        },
+        "connectionType": "IPsec",
+        "connectionProtocol": "IKEv2",
+        "routingWeight": 0,
+        "enableBgp": false,
+        "dpdTimeoutSeconds": 45,
+        "connectionMode": "Default"
+      }
+    }
+  ],
+  "outputs": {
+    "virtualNetworkGatewayId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('gatewayName'))]"
+    },
+    "localNetworkGatewayId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/localNetworkGateways', parameters('localGatewayName'))]"
+    },
+    "connectionId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/connections', parameters('connectionName'))]"
+    }
+  }
+}
